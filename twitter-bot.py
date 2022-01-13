@@ -81,7 +81,7 @@ class TwitterBot:
         if self.botEnabled:
             for __ in range(3):
                 try:
-                    self.bot.create_tweet(text=text, reply_settings="following")
+                    self.bot.create_tweet(text=text)
                 except TweepyException as e:
                     if self.monitor is not None:
                         self.monitor.sendMessage("Twitter", e, text)
@@ -114,23 +114,21 @@ def stats(twitterBot):
     metaTotalPayout = twitterBot.getPoolStat('total_payout_amount')
 
     #compute hashrate unit
-    metaGlobalHashrate = round((metaGlobalHashrate / 1000000),2)
+    metaGlobalHashrate = round((metaGlobalHashrate / 1000000000000),2)
     metaPoolHashrate = round((metaPoolHashrate / 1000000000),2)
-    metaPoolHashratePercent = round(((metaPoolHashrate * 0.1)/metaGlobalHashrate),2)
+    metaPoolHashratePercent = round(((metaPoolHashrate * 1)/metaGlobalHashrate),2)
 
     #Build the tweet
     tweet = ""
     tweet += f"The best Alephium Community pool"
     tweet += f"\n\n Network Hashrate : {metaGlobalHashrate} TH/s"
-    tweet += f"\n Pool Hashrate : {metaPoolHashrate} GH/s ({metaPoolHashratePercent} % of network hashrate)"
+    tweet += f"\n Pool Hashrate : {metaPoolHashrate} GH/s ({metaPoolHashratePercent} % of total)"
     tweet += f"\n Current Miners : {metaNumWorker}"
     tweet += f"\n Pending Rewards : {round(metaPendingPayout)} \u2135"
     tweet += f"\n Total Rewards paid : {round(metaTotalPayout)} \u2135"
     tweet += f"\n\n#blockchain #alephium #metapool"
 
-    print(tweet)
     twitterBot.sendMessage(tweet[:280])
-    #twitterBot.sendMessage("coucou")
 
 @staticmethod
 def humanFormat(num, round_to=2):
