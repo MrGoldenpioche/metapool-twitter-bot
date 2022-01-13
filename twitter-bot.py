@@ -15,7 +15,6 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from statistics import mean
 
-import backoff
 import requests
 import schedule
 import tweepy
@@ -167,7 +166,7 @@ def main(botEnabled, statsEnabled):
     
     while True:
        schedule.run_pending()
-       time.sleep(1)
+       time.sleep(60)
     
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()

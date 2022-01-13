@@ -1,0 +1,16 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+requests = "*"
+python-dotenv = "*"
+tweepy = "*"
+python-telegram-bot = "*"
+schedule = "*"
+
+[dev-packages]
+
+[requires]
+python_version = "3"
