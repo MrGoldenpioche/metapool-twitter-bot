@@ -5,3 +5,5 @@ services:
    metapool-twitter-bot:
     image: metapool-twitter-bot:v1
     restart: unless-stopped
+    env_file:
+      - .env
