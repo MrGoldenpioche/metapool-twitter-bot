@@ -24,6 +24,8 @@ from tweepy import TweepyException
 
 API_STATS_BASE = "https://api.metapool.tech/pool/stats"
 
+# base code svenhash <s@ono.re>
+
 class Monitor:
     def __init__(self, smtpServer, smtpSender, smtpPassword, smtpReceiver, smtpFrom, smtpPort=465):
         self.server = smtpServer
@@ -161,8 +163,7 @@ def main(botEnabled, statsEnabled):
                                         TWITTER_BEARER_TOKEN, TWITTER_ACCESS_TOKEN, TWITTER_ACCESS_SECRET, botEnabled, monitor)
     #scheduling
     if statsEnabled:
-        #schedule.every().minutes.do(stats, bot)
-        schedule.every().hours.at(":00").do(stats, bot)
+        schedule.every(4).hours.at(":00").do(stats, bot)
     
     while True:
        schedule.run_pending()
