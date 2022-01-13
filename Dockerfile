@@ -6,6 +6,6 @@ WORKDIR /twitter-bot
 RUN ["apt-get", "update", "-y"]
 RUN ["apt-get", "install","vim", "python3", "python3-pip",  "ca-certificates" ,"curl", "gnupg" ,"lsb-release", "git" ,"-y"]
 RUN ["pip", "install", "pipenv"]
-COPY ["Pipfile*","twitter-bot.py","/twitter-bot/"]
+COPY ["Pipfile*","twitter-bot.py",".env","/twitter-bot/"]
 RUN ["pipenv", "install","--system", "--deploy","--ignore-pipfile" ]
 CMD ["python3","-u", "twitter-bot.py" ]
