@@ -157,8 +157,9 @@ def main(botEnabled, statsEnabled):
     print(
         f"Start options:\n\tBot enabled: {botEnabled}\n"
             )
-
-    monitor = Monitor(SMTP_SERVER, SMTP_USER, SMTP_PASSWORD, SMTP_RECEIVER, SMTP_FROM)
+    if SMTP_SERVER is not None:
+        monitor = Monitor(SMTP_SERVER, SMTP_USER, SMTP_PASSWORD, SMTP_RECEIVER, SMTP_FROM)
+        
     bot = TwitterBot(TWITTER_CONSUMER_API_KEY, TWITTER_CONSUMER_SECRET,
                                         TWITTER_BEARER_TOKEN, TWITTER_ACCESS_TOKEN, TWITTER_ACCESS_SECRET, botEnabled, monitor)
     #scheduling
