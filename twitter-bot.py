@@ -18,10 +18,8 @@ from statistics import mean
 import backoff
 import requests
 import schedule
-import telegram
 import tweepy
 from dotenv import load_dotenv
-#from telegram import ParseMode
 from tweepy import TweepyException
 
 API_STATS_BASE = "https://api.metapool.tech/pool/stats"
@@ -158,11 +156,16 @@ def main(botEnabled, statsEnabled):
             )
 
     monitor = Monitor(SMTP_SERVER, SMTP_USER, SMTP_PASSWORD, SMTP_RECEIVER, SMTP_FROM)
-
     bot = TwitterBot(TWITTER_CONSUMER_API_KEY, TWITTER_CONSUMER_SECRET,
                                         TWITTER_BEARER_TOKEN, TWITTER_ACCESS_TOKEN, TWITTER_ACCESS_SECRET, botEnabled, monitor)
-
-    stats(bot)
+    #scheduling
+    if statsEnabled:
+        #schedule.every().minutes.do(stats, bot)
+        schedule.every().hours.at(":00").do(stats, bot)
+    
+    while True:
+       schedule.run_pending()
+       time.sleep(1)
     
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
