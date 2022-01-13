@@ -121,7 +121,8 @@ def stats(twitterBot):
     tweet += f"The best Alephium Community pool"
     tweet += f"\n\n Network Hashrate : {metaGlobalHashrate} TH/s"
     tweet += f"\n Pool Hashrate : {metaPoolHashrate} GH/s ({metaPoolHashratePercent} % of total)"
-    tweet += f"\n Current Miners : {metaNumWorker}"
+    if metaNumWorker > 0:
+        tweet += f"\n Current Miners : {metaNumWorker}"
     tweet += f"\n Pending Rewards : {round(metaPendingPayout)} \u2135"
     tweet += f"\n Total Rewards paid : {round(metaTotalPayout)} \u2135"
     tweet += f"\n\n#blockchain #alephium #metapool"
