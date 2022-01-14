@@ -204,8 +204,12 @@ def main(botEnabled, statsEnabled):
     else:
         #scheduling
         if statsEnabled:
-            schedule.every(4).hours.at(":00").do(stats, bot)
-    
+            schedule.every().day.at("08:00").do(stats, bot)
+            schedule.every().day.at("12:00").do(stats, bot)
+            schedule.every().day.at("16:00").do(stats, bot)
+            schedule.every().day.at("20:00").do(stats, bot)
+            schedule.every().day.at("00:00").do(stats, bot)
+            schedule.every().day.at("04:00").do(stats, bot)
         while True:
             schedule.run_pending()
             time.sleep(60)
