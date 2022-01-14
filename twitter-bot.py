@@ -22,6 +22,7 @@ from dotenv import load_dotenv
 from tweepy import TweepyException
 
 API_STATS_BASE = "https://api.metapool.tech/pool/stats"
+API_ALPH_PRICE_TICKER_BASE = "http://alephium.ono.re/api/ticker"
 
 # base code svenhash <s@ono.re>
 
@@ -97,12 +98,24 @@ class TwitterBot:
         desiredStat = response.json().get(value)
 
         if desiredStat:
-            #print(value + " = " + str(desiredStat))
+            print(value + " = " + str(desiredStat))
             return desiredStat
         else:
             return 0
 
-def stats(twitterBot):
+    #Return desired token prices info
+    def getAlphTokenomics(self, value):
+        session = requests.Session()
+        response = session.get(API_ALPH_PRICE_TICKER_BASE)
+        desiredStat = response.json()['ALPH_USDT'][value]
+
+        if desiredStat:
+            print(value + " = " + str(desiredStat))
+            return desiredStat
+        else:
+            return 0
+
+def stats(twitterBot, botEnabled):
 
     #Retrieve Pool statistics
     metaGlobalHashrate = twitterBot.getPoolStat('global_hashrate')
@@ -115,20 +128,42 @@ def stats(twitterBot):
     #compute hashrate unit
     metaGlobalHashrate = round((metaGlobalHashrate / 1000000000000),2)
     metaPoolHashrate = round((metaPoolHashrate / 1000000000),2)
-    metaPoolHashratePercent = round(((metaPoolHashrate * 1)/metaGlobalHashrate),2)
+
+    #avoid division by 0 
+    if metaGlobalHashrate != 0:
+        metaPoolHashratePercent = round(((metaPoolHashrate * 0.1)/metaGlobalHashrate),2)
+    else:
+        metaPoolHashratePercent = "undefined"
+
+    #Retrieve Tokenomics
+    alephiumTokenPair = twitterBot.getAlphTokenomics('currency_pair')
+    alephiumLastPrice = twitterBot.getAlphTokenomics('last')
+    alephiumPriceChange = twitterBot.getAlphTokenomics('change_percentage')
+   
+    if not botEnabled:
+        print("alephiumTokenPair = " + str(alephiumTokenPair))
+        print("alephiumLastPrice = " + str(alephiumLastPrice))
+        print("alephiumPriceChange = " + str(alephiumPriceChange))
+
+    #Compute tokenomics
+    metaPendingPayoutValue = round(metaPendingPayout * float(alephiumLastPrice), 2)
+    metaRewardPayoutValue = round(metaTotalPayout * float(alephiumLastPrice), 2)
 
     #Build the tweet
     tweet = ""
-    tweet += f"The best Alephium Community pool"
+    tweet += f"The best Alephium Community pool - www.metapool.tech"
     tweet += f"\n\n Network Hashrate : {metaGlobalHashrate} TH/s"
     tweet += f"\n Pool Hashrate : {metaPoolHashrate} GH/s ({metaPoolHashratePercent} % of total)"
     if metaNumWorker > 0:
         tweet += f"\n Current Miners : {metaNumWorker}"
-    tweet += f"\n Pending Rewards : {round(metaPendingPayout)} \u2135"
-    tweet += f"\n Total Rewards paid : {round(metaTotalPayout)} \u2135"
+    tweet += f"\n Pending Rewards : {round(metaPendingPayout)} \u2135 ({metaPendingPayoutValue} {alephiumTokenPair.strip('ALPH_')})"
+    tweet += f"\n Total Rewards paid : {round(metaTotalPayout)} \u2135 ({metaRewardPayoutValue} {alephiumTokenPair.strip('ALPH_')})"
     tweet += f"\n\n#blockchain #alephium #metapool"
 
-    twitterBot.sendMessage(tweet[:280])
+    if botEnabled:
+        twitterBot.sendMessage(tweet[:280])
+    else:
+        print("debug mode\n\n" + tweet)
 
 @staticmethod
 def humanFormat(num, round_to=2):
@@ -161,13 +196,19 @@ def main(botEnabled, statsEnabled):
         
     bot = TwitterBot(TWITTER_CONSUMER_API_KEY, TWITTER_CONSUMER_SECRET,
                                         TWITTER_BEARER_TOKEN, TWITTER_ACCESS_TOKEN, TWITTER_ACCESS_SECRET, botEnabled, monitor)
-    #scheduling
-    if statsEnabled:
-        schedule.every(4).hours.at(":00").do(stats, bot)
     
-    while True:
-       schedule.run_pending()
-       time.sleep(60)
+    #debug mode
+    if not botEnabled:
+        print("Bot not enabled. Debug only")
+        stats(bot, botEnabled)
+    else:
+        #scheduling
+        if statsEnabled:
+            schedule.every(4).hours.at(":00").do(stats, bot)
+    
+        while True:
+            schedule.run_pending()
+            time.sleep(60)
     
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
