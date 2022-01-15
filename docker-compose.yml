@@ -1,0 +1,8 @@
+version: "3.3"
+
+
+services:
+   metapool-twitter-bot:
+    build: .
+    restart: unless-stopped
+    env_file: .env
