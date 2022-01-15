@@ -115,7 +115,7 @@ class TwitterBot:
         else:
             return 0
 
-def stats(twitterBot, botEnabled):
+def stats(twitterBot, botEnabled=True):
 
     #Retrieve Pool statistics
     metaGlobalHashrate = twitterBot.getPoolStat('global_hashrate')
@@ -188,9 +188,8 @@ def main(botEnabled, statsEnabled):
     SMTP_RECEIVER = os.getenv("SMTP_RECEIVER")
     SMTP_FROM = os.getenv("SMTP_FROM")
 
-    print(
-        f"Start options:\n\tBot enabled: {botEnabled}\n"
-            )
+    print(f"Start options:\n\tBot enabled: {botEnabled}\n")
+    
     if SMTP_SERVER is not None:
         monitor = Monitor(SMTP_SERVER, SMTP_USER, SMTP_PASSWORD, SMTP_RECEIVER, SMTP_FROM)
         
