@@ -1,5 +1,13 @@
 # metapool-twitter-bot
-Cool bot who query metapool.tech API and create informationnal scheduled tweets
+Cool bot who queries metapool.tech API and create informationnal scheduled tweets.
+For the moment, the scheduling of the tweets is fixed to :
+
+ * 04:00
+ * 08:00
+ * 12:00
+ * 16:00
+ * 20:00
+ * 00:00
 
 ## Get the latest version
 ```
@@ -35,7 +43,7 @@ Of you course, you need to have a twitter API account and optionnally SMTP setti
 python3 ./twitter-bot.py
 ```
 
-### Standalone run with debugging mode
+## Standalone run with debugging mode
 ```
 python3 -/twitter-bot.py --no-bot
 ```
