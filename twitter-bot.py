@@ -127,11 +127,11 @@ def stats(twitterBot, botEnabled=True):
 
     #compute hashrate unit
     metaGlobalHashrate = round((metaGlobalHashrate / 1000000000000),2)
-    metaPoolHashrate = round((metaPoolHashrate / 1000000000),2)
+    metaPoolHashrate = round((metaPoolHashrate / 1000000000000),2)
 
     #avoid division by 0 
     if metaGlobalHashrate != 0:
-        metaPoolHashratePercent = round(((metaPoolHashrate * 0.1)/metaGlobalHashrate),2)
+        metaPoolHashratePercent = round(((metaPoolHashrate * 100)/metaGlobalHashrate),2)
     else:
         metaPoolHashratePercent = "undefined"
 
@@ -153,7 +153,7 @@ def stats(twitterBot, botEnabled=True):
     tweet = ""
     tweet += f"The best Alephium Community pool - www.metapool.tech"
     tweet += f"\n\n Network Hashrate : {metaGlobalHashrate} TH/s"
-    tweet += f"\n Pool Hashrate : {metaPoolHashrate} GH/s ({metaPoolHashratePercent} % of total)"
+    tweet += f"\n Pool Hashrate : {metaPoolHashrate} TH/s ({metaPoolHashratePercent} % of total)"
     if metaNumWorker > 0:
         tweet += f"\n Current Miners : {metaNumWorker}"
     tweet += f"\n Pending Rewards : {round(metaPendingPayout)} \u2135 ({metaPendingPayoutValue} {alephiumTokenPair.strip('ALPH_')})"
