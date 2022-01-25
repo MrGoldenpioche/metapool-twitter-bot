@@ -151,7 +151,7 @@ def stats(twitterBot, botEnabled=True):
 
     #Build the tweet
     tweet = ""
-    tweet += f"The best Alephium Community pool - www.metapool.tech"
+    tweet += f"The best Alephium pool - www.metapool.tech"
     tweet += f"\n\n Network Hashrate : {humanFormat(metaGlobalHashrate)}H/s"
     tweet += f"\n Pool Hashrate : {humanFormat(metaPoolHashrate)}H/s ({metaPoolHashratePercent} % of total)"
     if metaNumWorker > 0:
